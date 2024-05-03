@@ -97,6 +97,27 @@ function editEvent(day, eventToEdit) {
   }
 }
 
+// Función para calcular y mostrar la suma de horas para el mes actual
+function calculateTotalHoursForMonth(year, month) {
+  let totalHours = 0;
+
+  // Recorrer todos los días del mes
+  for (let i = 1; i <= new Date(year, month + 1, 0).getDate(); i++) {
+    const key = new Date(year, month, i).toISOString().split('T')[0];
+    if (events[key]) {
+      // Si hay eventos para este día, sumar las horas de cada evento
+      events[key].forEach(event => {
+        // Convertir la hora del evento a número y sumarla al total
+        totalHours += parseFloat(event.time);
+      });
+    }
+  }
+
+  // Mostrar el total de horas en el elemento con id "total-hours"
+  const totalHoursElement = document.getElementById('total-hours');
+  totalHoursElement.textContent = `Total de horas para el mes: ${totalHours}`;
+}
+
 // Crear el calendario
 function createCalendar() {
   const currentDate = new Date();
@@ -116,7 +137,7 @@ function createCalendar() {
 
     // Crear el botón de "Atrás"
     const prevMonthButton = document.createElement('button');
-    prevMonthButton.textContent ='◀';
+    prevMonthButton.textContent = '◀';
     prevMonthButton.classList.add('mes-anterior');
     monthHeader.appendChild(prevMonthButton);
     // Evento de clic para ir al mes anterior
@@ -133,134 +154,137 @@ function createCalendar() {
     // Crear el botón de "Siguiente"
     const nextMonthButton = document.createElement('button');
     nextMonthButton.textContent = '▶';
-    nextMonthButton.classList.add('mes-siguiente');
-    monthHeader.appendChild(nextMonthButton);
-    // Evento de clic para ir al mes siguiente
-    nextMonthButton.addEventListener('click', () => {
-      if (month === 11) {
-        currentYear++;
-        currentMonth = 0;
-      } else {
-        currentMonth++;
-      }
-      updateCalendar(currentYear, currentMonth);
-    });
-
-    // Añadir la cabecera al calendario
-    calendarElement.appendChild(monthHeader);
-
-    // Crear los nombres de los días de la semana
-    const dayNames = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-    const dayNamesRow = document.createElement('div');
-    dayNamesRow.classList.add('day-names');
-    dayNames.forEach(dayName => {
-      const dayNameElement = document.createElement('div');
-      dayNameElement.classList.add('day-name');
-      dayNameElement.textContent = dayName;
-      dayNamesRow.appendChild(dayNameElement);
-    });
-    calendarElement.appendChild(dayNamesRow);
-
-    // Crear los días del mes
-    const daysGrid = document.createElement('div');
-    daysGrid.classList.add('days-grid');
-
-    // Obtener el primer día del mes y ajustar para que sea lunes
-    const firstDayOfMonth = new Date(year, month, 1);
-    let startingDay = firstDayOfMonth.getDay() - 1; // Restar 1 para que el lunes sea el primer día (lunes=1, domingo=0)
-    if (startingDay === -1) startingDay = 6; // Si es domingo, cambiarlo a 6
-
-    // Crear espacios en blanco para los días anteriores si el mes no comienza en lunes
-    for (let i = 0; i < startingDay; i++) {
-      const emptyDayElement = document.createElement('div');
-      emptyDayElement.classList.add('day');
-      emptyDayElement.classList.add('empty-day');
-      daysGrid.appendChild(emptyDayElement);
-    }
-
-    // Crear los días del mes
-    const lastDayOfMonth = new Date(year, month + 1, 0);
-    for (let i = 1; i <= lastDayOfMonth.getDate(); i++) {
-      
-      const dayElement = document.createElement('div');
-      dayElement.classList.add('day');
-      dayElement.textContent = i;
-
-      const key = new Date(year, month, i).toISOString().split('T')[0];
-      if (events[key] && events[key].length > 0) {
-        dayElement.classList.add('event-day'); // Agregar clase 'event-day' si hay eventos en este día
-      }
-
-      // Agregar clase 'current-day' al día actual
-      if (currentDate.getDate() === i && month === currentDate.getMonth() && year === currentDate.getFullYear()) {
-        dayElement.classList.add('current-day');
-      } else {
-        dayElement.classList.add('selectable-day'); // Agregar clase a los días seleccionables
-      }
-
-      // Evento de clic para seleccionar el día
-      dayElement.addEventListener('click', () => {
-        // Remover la clase de los otros días seleccionados
-        const selectedDays = document.querySelectorAll('.selected-day');
-        selectedDays.forEach(selectedDay => {
-          selectedDay.classList.remove('selected-day');
-        });
-        // Agregar la clase al día seleccionado
-        dayElement.classList.add('selected-day');
-        // Mostrar los eventos del día seleccionado
-        showEventsForSelectedDay(new Date(year, month, parseInt(dayElement.textContent)));
-      });
-      daysGrid.appendChild(dayElement);
-    }
-    calendarElement.appendChild(daysGrid);
+nextMonthButton.classList.add('mes-siguiente');
+monthHeader.appendChild(nextMonthButton);
+// Evento de clic para ir al mes siguiente
+nextMonthButton.addEventListener('click', () => {
+  if (month === 11) {
+    currentYear++;
+    currentMonth = 0;
+  } else {
+    currentMonth++;
   }
-
-  // Función para mostrar el formulario de cita
-  function showAppointmentForm() {
-    // Ocultar el calendario
-    calendarElement.style.display = 'none';
-    // Mostrar el formulario de cita
-    appointmentForm.style.display = 'block';
-  }
-
-  // Obtener el botón flotante
-  const addEventFabButton = document.getElementById('boton-flotante');
-
-  // Evento de clic para ir a la pantalla de agregar evento
-  addEventFabButton.addEventListener('click', () => {
-    showAppointmentForm();
-  });
-
-  // Función para volver al calendario desde el formulario de cita
-  backToCalendarBtn.addEventListener('click', () => {
-    // Mostrar el calendario
-    calendarElement.style.display = 'block';
-    // Ocultar el formulario de cita
-    appointmentForm.style.display = 'none';
-  });
-
-  // Evento de clic para guardar la cita
-  document.getElementById('boton-guardar-form').addEventListener('click', () => {
-    const selectedDayElement = document.querySelector('.selected-day');
-    if (selectedDayElement) {
-      const selectedDay = new Date(currentYear, currentMonth, parseInt(selectedDayElement.textContent));
-      const appointmentName = document.getElementById('ingresar-evento').value;
-      const appointmentTime = document.getElementById('boton-hora').value;
-      addEventToDay(selectedDay, appointmentName, appointmentTime);
-      // Mostrar los eventos del día seleccionado
-      showEventsForSelectedDay(selectedDay);
-    }
-    // Limpiar los campos después de guardar el evento
-    document.getElementById('ingresar-evento').value = ''; // Limpiar el campo de nombre de evento
-    document.getElementById('boton-hora').value = ''; // Limpiar el campo de hora de evento
-    // Ocultar el formulario de cita
-    appointmentForm.style.display = 'none';
-    // Mostrar el calendario
-    calendarElement.style.display = 'block';
-  });
-
-  // Crear el calendario al cargar la página
   updateCalendar(currentYear, currentMonth);
+});
+
+// Añadir la cabecera al calendario
+calendarElement.appendChild(monthHeader);
+
+// Crear los nombres de los días de la semana
+const dayNames = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+const dayNamesRow = document.createElement('div');
+dayNamesRow.classList.add('day-names');
+dayNames.forEach(dayName => {
+  const dayNameElement = document.createElement('div');
+  dayNameElement.classList.add('day-name');
+  dayNameElement.textContent = dayName;
+  dayNamesRow.appendChild(dayNameElement);
+});
+calendarElement.appendChild(dayNamesRow);
+
+// Crear los días del mes
+const daysGrid = document.createElement('div');
+daysGrid.classList.add('days-grid');
+
+// Obtener el primer día del mes y ajustar para que sea lunes
+const firstDayOfMonth = new Date(year, month, 1);
+let startingDay = firstDayOfMonth.getDay() - 1; // Restar 1 para que el lunes sea el primer día (lunes=1, domingo=0)
+if (startingDay === -1) startingDay = 6; // Si es domingo, cambiarlo a 6
+
+// Crear espacios en blanco para los días anteriores si el mes no comienza en lunes
+for (let i = 0; i < startingDay; i++) {
+  const emptyDayElement = document.createElement('div');
+  emptyDayElement.classList.add('day');
+  emptyDayElement.classList.add('empty-day');
+  daysGrid.appendChild(emptyDayElement);
+}
+
+// Crear los días del mes
+const lastDayOfMonth = new Date(year, month + 1, 0);
+for (let i = 1; i <= lastDayOfMonth.getDate(); i++) {
+
+  const dayElement = document.createElement('div');
+  dayElement.classList.add('day');
+  dayElement.textContent = i;
+
+  const key = new Date(year, month, i).toISOString().split('T')[0];
+  if (events[key] && events[key].length > 0) {
+    dayElement.classList.add('event-day'); // Agregar clase 'event-day' si hay eventos en este día
+  }
+
+  // Agregar clase 'current-day' al día actual
+  if (currentDate.getDate() === i && month === currentDate.getMonth() && year === currentDate.getFullYear()) {
+    dayElement.classList.add('current-day');
+  } else {
+    dayElement.classList.add('selectable-day'); // Agregar clase a los días seleccionables
+  }
+
+  // Evento de clic para seleccionar el día
+  dayElement.addEventListener('click', () => {
+    // Remover la clase de los otros días seleccionados
+    const selectedDays = document.querySelectorAll('.selected-day');
+    selectedDays.forEach(selectedDay => {
+      selectedDay.classList.remove('selected-day');
+    });
+    // Agregar la clase al día seleccionado
+    dayElement.classList.add('selected-day');
+    // Mostrar los eventos del día seleccionado
+    showEventsForSelectedDay(new Date(year, month, parseInt(dayElement.textContent)));
+  });
+  daysGrid.appendChild(dayElement);
+}
+calendarElement.appendChild(daysGrid);
+
+// Calcular y mostrar el total de horas para el mes actual
+calculateTotalHoursForMonth(year, month);
+}
+
+// Función para mostrar el formulario de cita
+function showAppointmentForm() {
+// Ocultar el calendario
+calendarElement.style.display = 'none';
+// Mostrar el formulario de cita
+appointmentForm.style.display = 'block';
+}
+
+// Obtener el botón flotante
+const addEventFabButton = document.getElementById('boton-flotante');
+
+// Evento de clic para ir a la pantalla de agregar evento
+addEventFabButton.addEventListener('click', () => {
+showAppointmentForm();
+});
+
+// Función para volver al calendario desde el formulario de cita
+backToCalendarBtn.addEventListener('click', () => {
+// Mostrar el calendario
+calendarElement.style.display = 'block';
+// Ocultar el formulario de cita
+appointmentForm.style.display = 'none';
+});
+
+// Evento de clic para guardar la cita
+document.getElementById('boton-guardar-form').addEventListener('click', () => {
+const selectedDayElement = document.querySelector('.selected-day');
+if (selectedDayElement) {
+const selectedDay = new Date(currentYear, currentMonth, parseInt(selectedDayElement.textContent));
+const appointmentName = document.getElementById('ingresar-evento').value;
+const appointmentTime = document.getElementById('boton-hora').value;
+addEventToDay(selectedDay, appointmentName, appointmentTime);
+// Mostrar los eventos del día seleccionado
+showEventsForSelectedDay(selectedDay);
+}
+// Limpiar los campos después de guardar el evento
+document.getElementById('ingresar-evento').value = ''; // Limpiar el campo de nombre de evento
+document.getElementById('boton-hora').value = ''; // Limpiar el campo de hora de evento
+// Ocultar el formulario de cita
+appointmentForm.style.display = 'none';
+// Mostrar el calendario
+calendarElement.style.display = 'block';
+});
+
+// Crear el calendario al cargar la página
+updateCalendar(currentYear, currentMonth);
 }
 
 // Crear el calendario
@@ -268,5 +292,5 @@ createCalendar();
 
 // Función para actualizar el calendario con el mes y año especificados
 function updateCalendar(year, month) {
-  // Tu código para actualizar el calendario iría aquí
+// Tu código para actualizar el calendario iría aquí
 }
