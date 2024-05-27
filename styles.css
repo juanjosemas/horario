@@ -274,10 +274,17 @@ body{
 
 .btn{
     font-family: Piedra;
-    box-shadow: 2px 4px 4px 4px rgba(71, 71, 71, 0.70);
+    font-size: 20px;
+    border: 3px solid black;
+    border-radius: 12px;
     font-style: italic;
-    border-radius: 15px;
+    background-color: #ccc;
+    float: right;
+    margin-top: -40px;
+    
 }
+
+
 
 
 
