@@ -273,15 +273,17 @@ body{
 }
 
 .btn{
-    font-family: Piedra;
+    font-family: Lobster;
     font-size: 20px;
-    border: 3px solid black;
-    border-radius: 12px;
+    border: 1px solid white;
+    border-radius: 15px;
     font-style: italic;
-    background-color: #ccc;
+    background-color: navy;
+    color: #fff;
     float: right;
     margin-top: -40px;
-    
+    box-shadow: 2px 4px 4px 4px rgba(71, 71, 71, 0.70);
+   z-index: 999; /* Asegura que esté encima de otros elementos */
 }
 
 
