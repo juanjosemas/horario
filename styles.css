@@ -18,6 +18,7 @@ body{
     font-family: Piedra;
     font-style: italic;
     margin-top: 0;
+    margin-left: 90px;
 }
 
 /* Estilos para el calendario */
@@ -255,6 +256,7 @@ body{
     top: 5px;
     left: 5px;
     text-decoration: underline;
+    margin-left: 60px;
 }
 
 .reloj{
@@ -270,20 +272,30 @@ body{
     text-decoration-color: red;
     font-style: italic;
     font-weight: bold;
+    margin-left: 40px;
 }
 
-.btn{
-    font-family: Lobster;
-    font-size: 20px;
-    border: 1px solid white;
-    border-radius: 15px;
-    font-style: italic;
-    background-color: navy;
-    color: #fff;
-    float: right;
+.ico {
+    float: left;
     margin-top: -40px;
-    box-shadow: 2px 4px 4px 4px rgba(71, 71, 71, 0.70);
-   z-index: 999; /* Asegura que esté encima de otros elementos */
+    border-radius: 50%;
+    animation-name: logo;
+    animation-duration: 3s;
+    transition: all 0.5s ease-in-out;
+    background-color: black;
+    border: 2px solid red;
+    box-shadow: 0 0 0 3px black;
+}
+
+@keyframes logo {
+    from {
+        opacity: 0;
+        transform: scale(0.5) rotate(0deg);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(1440deg);
+    }
 }
 
 
