@@ -115,7 +115,7 @@ function calculateTotalHoursForMonth(year, month) {
 
   // Mostrar el total de horas en el elemento con id "total-hours"
   const totalHoursElement = document.getElementById('total-hours');
-  totalHoursElement.textContent = `Total de horas para el mes: ${totalHours}`;
+  totalHoursElement.textContent = `Total horas de este mes: ${totalHours}`;
 }
 
 // Crear el calendario
@@ -294,8 +294,6 @@ createCalendar();
 function updateCalendar(year, month) {
 // Tu código para actualizar el calendario iría aquí
 }
-
-
 
 const $tiempo=document.querySelector('.tiempo'),
 $fecha= document.querySelector('.fecha');
