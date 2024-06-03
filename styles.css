@@ -262,6 +262,7 @@ body{
 
 .ico {
     float: left;
+    margin-left: 15px;
     margin-top: -40px;
     border-radius: 50%;
     animation-name: logo;
