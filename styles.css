@@ -18,7 +18,7 @@ body{
     font-family: Piedra;
     font-style: italic;
     margin-top: 0;
-    margin-left: 10px;
+    margin-left: 50px;
 }
 
 /* Estilos para el calendario */
@@ -253,8 +253,8 @@ body{
     font-style: italic;
     font-size: 18px;
     position: relative;
-    top: 5px;
-    left: 5px;
+    top: 10px;
+    left: 25px;
     text-decoration: underline;
     margin-left: 60px;
     margin-top: -10px;
@@ -282,6 +282,21 @@ body{
         opacity: 1;
         transform: scale(1) rotate(1440deg);
     }
+}
+
+.reloj{
+    font-family: Lobster;
+    color: black;
+    text-align: center;
+    position: absolute;
+    left: 17%;
+    top: -1%;
+    font-size: 16px;
+    letter-spacing: 0.18em;
+   /* text-decoration: underline;
+    text-decoration-color: red;*/
+    font-style: italic;
+    font-weight: bold;
 }
 
 
