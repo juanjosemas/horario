@@ -19,6 +19,8 @@ body{
     font-style: italic;
     margin-top: 0;
     margin-left: 50px;
+    color: black;
+    text-shadow: 3px 3px 1px lightcyan, 5px 5px 2px lightcyan, 8px 8px 3px lightcyan;
 }
 
 /* Estilos para el calendario */
@@ -258,6 +260,7 @@ body{
     text-decoration: underline;
     margin-left: 60px;
     margin-top: -10px;
+    text-shadow: 3px 3px 1px lightcyan, 5px 5px 2px lightcyan, 8px 8px 3px lightcyan;
 }
 
 .ico {
